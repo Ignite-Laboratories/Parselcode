@@ -1,0 +1,543 @@
+Introduction
+Chapter 3
+A Shared Vicvv of Sharing:
+The Treaty of Orlando
+Lynn Andrea S t.ein
+Henry Licbcnnan
+David Ungar
+l
+For the past few years, researchers have been debating the relative merits of object-oriented
+la.ngua.ges with classt's and inherila.nce as opposed lo those with prototypes and ddega.-
+tion. It has become clear that the object-oriented programming language design space is
+nol a, dicholomy. Irrntea.d, we ha.vc identified two fundamental mechanisms-kmplales and
+fmpathy and several different independent degrees of freedom for ead1. Templates ueate
+new objects in their own image, providing guarantees about the similarity of group
+members. Empathy allows an objecl lo acl a.s if it were some olher objecl, thus providing
+sharing of state and behavior. The Smalltalk-80nr language, 1 Artors, Lieberman's l)F;T.-
+EGATION system, SELF, and HYBRID ea.ch take differing stands on the forms of templates
+1 Srnalltalk-80TM is a l.r,ukrnark of Pa.rcPla.cc S_v8Lcrrn;. Tn t.l1is c:liiLpl.cr, t.l1c Lcrrn "SmiLlll,iLlk" will be used
+to refer t.o the Smalltalk-8IJ TM programming language.
+and em pa.thy.
+Some varieties of template and empathy mechanisms a.re appropriate for building wellunderstood
+programs that must be extremely reliable, while others are better suited for
+the ra.pid prototyping of solutions to difficult problems. The differt'nces hct wet'n la.ngua.gcs
+designed for ea.r.h of these application domain8 can be reca8t a8 the difference8 between
+support for anticipated vs. unanticipated sharing. One can even ascribe the ascent of
+ohject-oriented programming to its strong support for extension instead of modilica.Lion.
+However, then~ are 8till many kinds of extension that remain diffirnlt. The decomposition
+of an object-oriented language into template and empathy mechanisms, and the degree of
+support for extension provided by Lhe forms ol these mechanisms comprise a solid framework
+for studying language design.
+\Ve begin th i8 r,hapter with the text of nu r "Treaty," in w h ir.h we out Ii ne the basis for 011 r
+consensus. In section :L!, we discuss the differences between anticipated and unanticipated
+sharing. Section 3.3 ddincs more formally Lhe funda.menta.l terms and concepts we have
+identified. Sever;:il languages representing different para.digm8 are examined as ex;:imtlles of
+these mechanisms in section :t,1. Finally, section ;{.5 describes the larger issues of software
+evolution which underly the issues raised here; in this context, our r.onclu8ion8 can be seen
+as a partial solution to the more general problems of sharing.
+:-u. THE TREATY
+3.1 The Trea(11
+:Vlechanisms for sharing knowledge and behavior between objects are among the most useful
+and a.lso the most hotly debated features of object-oriented languages. The three authors of
+this chapter have previously published papers in which new sharing mechanisms for objectoriented
+languages ,vere prominently featured. We met on the occasion of OO/'SI.A '87, in
+Orlando, Florida, and discovered through discussion that v,:e shared a common outlook that
+both dariJies the reasons for design choices made in previous languages, and also points the
+way toward future research in this area. We call this consensus the Treaty of Orlando. 2
+WrrnREAS the intent of object-oriented programming is to provide a natural and straightforward
+way Lo describe real-world concepts, allowing the llexibility of expression necessary
+to capture the variable nature of the world being modeled, and the dynamic ability to
+represent changing situations: and
+WttF;RF.AS a fundamental part of the naturalness of expression provided by object-oriented
+programming is the ability to share data, code, and definition, and to this end all objectoriented
+languages provide some way to ddine a new object. in terms of an existing one',
+borrcrwing implementation as well as behavioral description from the previously defined
+object; and
+WrrnREAS many object-oriented languages-beginning with Simula.-67, and including Smalltalk,
+Flavors, and Loops-have implemented this sharing through classes, which allow one group
+2 The original treaty t.ex:t appears in [.Power and Weiss, 1988].
+of objects to be defined in terms of another, and also provide guarantees about group
+members, or instances; and
+WHF;RF.AS these mechanisms class, subclass, and instance impose a rigid type hierarchy,
+needlessly restricting the flexibility of object-oriented systems, and in particular do
+nol easily pennil dynamic conlrol over the patterns of sharing between objects; which dynarnir.
+r.ontrol is partir.ularly necessary in experimental programming situations, when? the
+evolution of soft,va.re can be expected to proceed rapidly; and
+W HJ<:KEAS the signalories Lo this trealy have independently proposed seemingly disparate
+solutions to this problem, to wit:
+[Lieberman, 1986] proposed that traditional inheritance be replaced by delegation, which is
+Lhe idea lhal sharing between objects can be accomplished through the forwarding of
+rn12ssag12sa, llowing one obj12ct to decid12 at runtime to fonvard a rn12ssag12to anoth12r,
+more capable object, and giving this new object the ability to ans,ver this message
+on the first (del12gating) objer.t's behalf: in this scheme, prototypical obj12cts the
+"typical elephant/' for example~replace abstract classes~c.g. the class elephant~as
+Lhe reposilory for shared infonnalion:
+[Ungar and Smith, "1987] also propos12d a prototype-bas12d approar.h, using a drastic sirnplification
+of the Smalltalk model in which a single type of pa.rent link replaces the
+more complex class/subclass/instance protocol; while this approach dm's not propose
+explicit d12legation, through "dynamic inh12ritanr.e" it sharps thP 12ssential charact12r:-
+u. THE TREATY 5
+istics of allmving dynamic sharing patterns and idiosyncratic: behavior of individual
+objects;
+[Stein, 1987] attempted a rapprochement between the delegation and inheritance views,
+pointing oul that the da.ss/imbcbss rcla.tionship is essentially lhis "ddcga.tion," or
+''dynamic inheritance," and that these new styles of sharing simply make a shift. in
+representation, using ,1.:hat were previously considered "classes" to represent real-world
+entities rather than abslrad groups; this approach gives a differcnl wa.y of providing
+idiosync:ra.tic behavior and dynamic sharing, through extensions to the class-instanc:e
+relationship;
+Wtt1::B.Ei\.S the signalories to this trcaly now recognize lhal their seemingly divl'l'gcnl
+a.1lproa.ches share a corn mon underlying view on the issues of sharing in object-oriented
+systems, we now declare:
+Rr.soT.VF;D, that we recogni1,e t\vo fundamental rnec:ha.nisrns that sharing mechanisms for
+objccl-oricntcd languages must implcnll'nt, and that ca.n be used for analyzing and cornparing
+the plethora. of linguistic rned1a.nisrns for sharing provided by different object-oriented
+languages: The first is empathy, the ability of one object to share the behavior of another
+ohjccl without l'Xplicit rcddinilion: a.nd the second is lhc ability lo crca.tc a. new object
+based on a template, a. "cookie-cutter" which guarantees, at lea.st in part, characteristic:s of
+the newly created object.
+Rr.sor.vr.o, that most significant differences between sharing mechanisms can be analyzed
+(i
+as ma.king design dioires that diffar along the following three independent dimensions, to
+wit:
+Firs/, whether SLtTICor DYIViUfIC: vVhen does the system require tha.t the pat.terns ol
+sharing lw fixed? Static. systems require determining the sharing patterns by the time
+an object is created, while dynamic systems permit determination of sharing patterns
+when an object actually rt'ceives a message': and
+,S'f:conrl,w het.her /:vi l)f,ICl'l'or f,;)( l)f,ICl'I': Does the system have an operation that allows
+a, programmer Lo explicitly direct the pa,tterns of sha,ring bet.ween objects, or does the
+system do this automatirally and uniformly'? and
+Third, whether PER OBJECTor PER GROUP: Is behavior specified for an entire group of
+objects a.t once, as it is with traditional cla.sses or types, or can idiosyncra.tic behavior
+be attached to an individual object? Conversely, can behavior be specified/guaranteed
+for a. group'?
+Rr.soT.VF;D, that no definitive answer as to \vhat set of these choices is best can be reached.
+Ra.thcr, tha.t different programming situa,tions call for different combinations ol these feat
+II res: for more exploratory, experimental program rn i ng environments, it may be desirable
+to allow the flexibility of dynamic, explicit, per object sharing; while for large, relatively
+routine sortwa.re production, restricting Lo the complimenta.ry set of choices-strictly static,
+implicit, and group-oriented may be more appropriate.
+3.2. ANTICIPATED VS. UNANTICIPATED SHARING 7
+'RtsOL\/EO, tha.t as systems follow a natural evolution from dynamic a.nd disorganized
+to statir. and more highly optirni;,:ed, the objert re1nesentation should also have a natural
+evolutionary pa.th; and that the development environment should itself provide more flexiblc
+representations, Logel.her with tools-ideally auLonrnLic-for adding those structures
+(of dass, of hierarr,hy, and of r,olledion, for example) as the design (or portions thereof)
+stabilizes.
+a.nd 'R,E,SOLV J::.O, tha.t this agrt'ement shall lwnceforth lw known as tlw TrrnA'TY OF O !tLAN 00.
+3.2 Anticipated 'VS. Unanticipated Sharing
+In this chapter, we distinguish between two kinds of sharing that a.rise in object-oriented
+systems; or rather, two kinds of motivations for introducing sharing into a.n object-oriented
+system. The distinrtion between these is an important determiner of preferenr.e among
+object-oriented language mechanisms. One is anticipated sharing. During the conceptual
+phase of system design, bdorc adual coding sta.rts, a. designer can often foresee commonalities
+bet\veen different parts of the system, leading to a desire to share pror,edures and
+data. between those simila.r parts. This is best a.ccomplished by la.ngua.ge mechanisms which
+provide a means for the designer to write down the antir,i1la.ted strurture to be shared by
+other components. In tra.ditiona.l Simula-like object-oriented languages, classes serve as the
+rnecha.nisrn for encoding a.nticipated sharing oflwha.vior, which ma.y be utilized by a perhaps
+un;:wtir,ipated number of instanr,es.
+8
+In contrast, unanticipated sharing is less well served by traditional inheritance mechanisms.
+Unanticipated sharing arises ,vhen a designer ,vould like to introduce new behavior
+inlo an object system tha.t docs not already provide for it, and may not have bec'n foreseen
+when the original system was programmed. The designer may notir.e that new behavior can
+be accomplished, in part, hy making use of alrcady-exisling components, though procedure's
+a.nd data. may have to be added or a.mended as ,veil. Thus, a. sharing relationship arises
+among components that a.re used in common for both their original, anticipated purposes,
+and their new, unanticipated purposes. Obviously, since the new behavior has nol been
+anticipated, being forced to state the sharing relationships in advance puts a restridion
+on the kinds of new behavior that can be introduced without modifying the previous syslern.
+The traditional dass-suhchtss-instance mccha.nism requires lextually distinguishing,
+in a static way, bet,veen those elements intended as common behavior, namely classes, and
+those expected to be idiosyncratic, the instances.
+Supporling unanticipalc'd sha.ring is important smce sofLwa,rc evolulion ol'Len follows
+unpredictable paths. A language mechanism supports unanticipated sharing best if new
+behavior can be introduced simply by explaining to the system what the differences are
+between the desired new behavior and the existing old behavior. Delegation, or dynamic
+inheritance, accomplishes this by allowing new objects to re-use the behavior of existing
+ones without requiring prior specification of this relationship.
+The examples in [Lieberman, 1986] slress lhe a.dva.ntages of delegation in silualions
+where reasonable behavioral extensions to a. system are unlikely to be anticitlated in the
+3.2. ANTICIPATED VS. UNANTICIPATED SHARING !-)
+Figure 3.1: A dribble stream records inlnaction on a previously implemented terminal
+stream.
+original design of a syslcm. IL is rea.sonablc Lo want lo dcline a. "dribble stream" Lo record
+interaction on previously implemented I/0 -input-output streams, but it is unreasonable
+to require that the implementors of the original I/0 streams have prepared in advance
+for Lhc existence of dribble streams. On lhc olhcr hand, il is rca.sonablc lo expt'cl. that
+a. designer who first implements a stream to an interactive terminal build it upon some
+ohjecl rcprcst'nting lhe abstracl no lion of "an I/0 stream", a.nticipaLing lhal there will
+eventually be some other types of streams, such as disk or network streams. It would
+be silly to implement a disk stream by delegating to a terminal stream for common
+opera.Lions simply beca.usc the terminal stream happened Lo have been irnplcnwnted 1irsl.
+This illustrates the difference between antiripated and unanticipated sharing. It is primarily
+10
+an issue of software evolution and design aesthetics, and only indirectly a language issue.
+The main result of [Stein, 1987] can be rephrased in these terms: because a subclass is
+ddined by stating the differences, in both procedures and da.ta, between it a.nd its supercbss,
+the relation between s11b class and fill perclass is better suited toward unanticipated sharing
+than the class-instance relation, which limits the diffen'nces between an instance and its
+class to the values of its variables.
+3.3 Basic Mechanisms
+The arguments over what is fonda.mental in ohject oriented programming have existed for
+as long as the field. Which features classes, prototypes, inheritance, delegation, message
+passing, encapsulation, abstraction-are at the heart of object oriented programming, and
+how these things rcla.te Lo one another, arc not issues that will soon be resolved. Rather
+than try to settle this debate, we present here two mer.hanisms ,vhich are used in most ob_jer.t.
+oriented langua.e;es: empathy and templates. \Ve claim that they are fundamental in that
+they cannol he ddined in terms of one another, a.nd that most ohjecl oriented la.ngua.ges
+mn be described largely in terms of the ways in whir.h they r.ombine these mechanisms.
+The first of these mechanisms tmdc-rlies both inheritance and delegation. In all languages
+accepted as ob_jer.t. oriented there is some way in whir.h one objer.t can "borrow" an
+attribute-variable or method-from another. We propose to use the term empathy for
+this behavior:
+\Ve say that ob_jer.t. A ernpathi7.es with object B for message A1 if A doesn't have its
+3.3. BA.SIC MECHA.NIS.\IS 11
+Figure 3.2: The pen al (100,200) ernpalhizes with lhc pen al (50,200) l'or its Y variable,
+and for the Draw method.
+own protocol for responding to .A1, but instead responds to ,:l1 as though it ,vere borrmving
+B's response protocol. A borrows just the response protocol, but not the rest of B. That
+is, any time B's response protocol requires a message to be sent to SELF (or a variable to
+be looked up), it is 8cnl lo A, nol Lo B; oLhcrwi8c, A and B n'spond in the sa.mc way. f<J1·
+example, in Fig. 3.2, the pen at (100,200) empathi.U.'.S with the pen at (50,200) for its Y
+variable, and for the Draw method. 3
+-'·l•'ormally, we say that object A fmpathizeswith object B for A-1 when the following holds: lf B's behavior
+in re5ponse to_.\.,( can be expressed a5 a function ?j,(13_, .\..1)-that is, B's method for A-1c an be expressed as
+a. r1111<:Lio11tl ,a1. La.kc, SELF as iLII a.rg11rr1c11t a.long wil.l, _.\,{ Lhc11 A's rc:spo11sc Lo )A c:;u1 he cxprc:ssccl 11si11g
+the 5ame function ,!., as 0(A, _.\.1)-A's behavior is derived by u5ing A wherever 13 would have u&ed itself.
+The syrr,rnclry i11 tl,is bd,a.vioral dc:rinil,io11 of c:rnpa.Ll,y rnay seem co1111Lcrint.uiLivc, but sud, syrnrr,c:Lry is
+12
+All incarnations of inhPritancP and dPIPga.tion includP Pm Ila.thy; thPy ditfar as to mhen
+and how the relationships are determined. Empathy may be explicit: "Execute this Object: thisRout ine
+in my environmcnl," a,s in Lhc abiliLy of CommonLoops lo specialize method lookup. Il ma'.y
+be by default: "Anything I can't handle locally, look up in myParent (and execute in my
+enviromnenl) with SELF ;;; me," as in Smalltalk, SELF', and c++. IL may be dynamic or
+static, per object or per group. These language choices are responsible for much of the
+variety of existing object oriented paradigms.
+Inheritance, as found in Simula and Smalltalk, is the preprogrammed determination
+of default delegation paths, by group. It requires the generation of uniform groups of
+ohjccls. It sepa.raLcs Lhc ddcga.Lablc ( lra,dilionally, methotb only) from lhc non-ddcga.tablc
+(traditionally, the instanr,e variables). The delegatable Ila.rt is stored in the dass: the nondelegatable
+is necessarily allocated independently for each instance.
+But it is perhaps the interaction of delegation with the second fundamental mechanism,
+lhal of te1nplates, which determines lhc mosl inlnesLing and conLrovcrsial disLincLiom:
+between types of ob_jed-oriented languages. A tern plate is a kind of "rookie cutter" for
+objects: it contains all the method and variable definitions, parent pointers, etc., needed to
+ddinc a. new ohjccl of Lhc same type. H Lhc object may not gain or lose a.ttrihuLes once' il
+is defined, we call thP templatP strict.
+inherent in any behavioral definition. All a behavioral definition can do is ~ay that the behaviofo of two
+objccl.8 a.re similar a.cc:orcling l.o some criLcriou: _vo11 c:arr't. Ldl "who clid l.lrc irrrplcrnc11Li11g" unless you look
+into the code of the implementat,ion.
+3.3. BA.SIC MECHA.NIS.\IS
+In many languages, after the template is copied, or "instantiated," changes to this nev-;
+object may be permissible, weakening the guarantee of uniform behavior by group. These
+va.riaLions on sLricl Lcrnpla.Lcsa .re discussed below. In a.ddiLion, there an' la.ngua.gcs wiLhoul
+templates; however, in these languages, such as Lieberman's DF;T.F;C:ATTON, the system
+provides no inhcrcnl concept of "group," or ''kind," of object.
+In some' languages, such as S1<:LF and Aclra, lhc lemplaLc is itself an objc,ct. In olhcrs,
+it is embedded in another, genera.tor object, usually called a. class. A class is an object of
+one type which contains a template for objects of another type. Thus, class elephant is
+an object of type Class, but rnnta.ins a template for objects of type Elephant. The objects
+cut from the template embedded in a class are known as its instances.
+Traditionally, this class-instance relationship is strict: a strict (instance) template
+lisls exactly those atLrihuLcs lhal each ohjccl cut from that Lcmpla.te must dcline, and
+no cookie-cut object can define attributes other than those in the template. Because the
+lemplaLc is strict, each object cut from it will have a, local copy of each allribute; these
+attributes cannot be redefined or removed; therefore they will never be delegated. A rlass
+thus guarantees the uniformity and independence of its "cookie-cut" instances.
+However, this rdaLionship can be relaxed in sc'vcral wa.ys. For example, a. minimal
+ten1plate is a rookie cutter in the same sense, but once rreated, rookie-rnt objects can
+define other attributes as well. An extended instance-one generated by a minimal template,
+lhcn added Lo-docs nol, a priori, have a, templale for its type. Its descendants cannot be
+strict instanres, sinre ther12 is no ternplat12 for th12ir type. On th12 other hand, the 12xtended
+H
+Dctenninalion of Empathy Tcmpla.Lc Meclw.nisms
+Language when hm1,· for what how
+Actors runtime explicit per object. none
+D le LJ::G, AT 10 _\/ runtime both per object none
+SELF' runtime implicit 4 per object templates nonstrict
+Simula compile lime implicil per group classes stricl
+Smalltalk objecl creation lime implicil per group classes stricl
+HYBRID runtime both both any nonstrict
+Table :1.1: Various languages and their attributes.
+instance can be promoted, transforming it into a class, of type Class but with a template
+for its original type. This class may lhen have instances.
+Other relaxations in template enforcement create a variety of non-strict templates. In
+languages where templates are themselves objects, templates are often entirely non-strict.
+Thal is, an object may be crealed from a Lcmplalt', bul subsequenlly go on Lo add or ddcle
+attributes, transforming it from a COflY of its template into a new type of object., as in Sn,F.
+3.4 Some Case Studies
+In this section, we describe several languages which exemplify three of lhc language paradigms
+we have identified. The first paradigm is the least constrained; Actors and l)F;T.F;CATJON
+:-u. SOME CASE STUDIES 15
+a.re almost purnly dynamic empathy systems -which support the maxirmilly flexible set of
+choices. SELF adds to this the concept of template, making grouping of objects possible.
+IIcnvever, S!cU' docs not have classes, and remains a fully dyna.mic a.nd Hexiblc language',
+The third paradigm is the "dasskal" styleofobjer.t-oriented programming found in Simula.
+a.nd Smalltalk. -While lra.dilionally lhis pa.radigrn has lwen used in a rigid a.nd inilcxiblc
+man rrnr, we descrilw one language HYRRm which maintains the strud.u re of a class-based
+system while allowing much of the flexibility of the previous two paradigms. A summary of
+la.ngua.ge l'ealurcs is given in Table :3,
+3.4.1 Actors and Liebennan's DET.EGATTON
+The actor systems of Hewitt and his colleagues at IvIIT represent the most extreme orientalion
+towards dyna.mic and 1kxihk conlrol. Tlw basic actor model provides only Jor adi vc
+olljects and parallel message passing [Agha., -i987] a.nd so mandates no particular sharing
+mechanism. However, actual actor implementations [Lieberman, 1987] have found it most
+natural to use delegation as the sharing mer.hanism, since the ar.tor philosophy encourages
+using patterns of message passing to express what in other languages v.:ould require
+special-purpose nwchanisms [IfowitL, 1984].
+Along the three dimensions of our treaty, ad.or systems r.;:1.n be r,lassified as dynarnir.,
+explicit, and per-object. Sharing mechanisms in actors a.re dynamic, since message passing
+is a run-Lime opera.Lion, invoked wilhouL prior deda.ralion. Ddega.tion requires explicit.
+designation of the recitlient. Delegation is ar,complished th rough a sper.ial message-passing
+Hi
+proton,I that includes the client (the equivalent of the SELF variable in Smalltalk-like Iangua.
+ges) as pa.rt of the message. Since actor systems have no notion of type, sharing must be
+specified on a pcr-objecl basis. There arc no templalcs, class or insLanlia.tion rnecha.nisrns
+defined in the kernels of actor languages. Of c:ourse, nothing predudes the use of delegalion
+and objt'cl. creation operalions in aclor systems Lo implement lcmplates, or objt'cl.s
+representing dasses or sets.
+The major c:onceptual difference between actors and the Simula family of languages
+a.rises in what is considered fundamental. In the traditional Simula-like languages, mechanisms
+of class, subclass and instantiation are considered fundamental. The behavior of the
+message passing operation is explained in terms of them and their influence on variable and
+procedure lookup. In a.cl.or syslt'ms, the message passing opera.Lion is considered funda.-
+mental. J-<'.vevna riable lookup must lw explain12d in t12rms of sending m12ssag12tso an objed.
+representing the environment. Thus, sharinfc?m; echanisms in actor systems a.re built on top
+l)F.LF.CATT0K is an outgrowth of the actors languag12s. As such, it has no templates.
+Object creation is independent of the parent: a new object is created by ma.king a ne\V
+empty objt'cl. which points lo some olher object (or doesn't, a.sis tksired), a.nd then filling . .
+in th12 d12tails of what that obj12d. should contain. Thus, an objed. with no attributes but a
+name could be a child of ( and therefore delegate to) an elephant or an employee or a real.
+Since there arc no "class ddining objects," there a.re no "classes" or groups oJ objects oJ
+the sam12 "typ12." J-<'.v12oryb jed. determines its own, unique "typ12." Th12r12is thus no distinc:-
+:-u. SOME CASE STUDIES 17
+Figure 3.3: A Di:;u.(;ATlO_\/ hierarchy.
+lion between creating a new object, and creating a, new "type" of object. In Di:;11:;(;ATJO_\/,
+everything is done on a.n objer,t-by-objer,t basis. DF.LF.CATJOK is entirely dynamic anything
+can change at any time. Empathy in DELEGATIOK can be either hierarchical (implicit) or
+l'xplicit. Figure 3.3 shows a, DELEGA'l'IOI\ hierarchy.
+3.4.2 SELF
+SELF was designed to aid in explora.tory programming by optimizing express1 veness and
+malleability. It is essentially a tern fl late-based language; however, Sr..LF tern plates a.re as
+much a matter of convention as of language design. New objects are created by cloning an
+existing ones; the original object-called a prototype-behaves in much Lhc same way as the
+standard template desuibed above. In l'ig. :3.4, a new elephant (l'red) has been created
+18
+Figure :3.4: A SEU hit'rarchy.
+by copying an existing elephant (Clyde). Clyde is thereby functioning as a prototype, or
+template.
+SELF templates a.re non-strict: so the objects they create can extend or otherwise modify
+their templaLe-ddined properties. Some attributes in the child ma.y oimply be dclcga.Lcd Lo
+the parent object, whilP ot.h12rs may bP. handl12d lor,ally or del12gat12d elwwhP.rP.. Th12 new
+object may also have additional attributes not defined for the template, creating a sort of
+"extended instance." ~cw kind~ of objects a.re created by ma.king a new Lcrnplatc-doning
+and t.h12n modifying an existing obj12r,t so that. it has the rnquisit.e propertiP.s. In this way,
+a sort of "subclass" behavioral inheritance can be created.'' Thus: one can take an elephant
+~ft is wort!, r10Li11g tl1at 1.l1crc is 110 clisLi11cLio11 hdwcc11 Lhc coriccpb of "cxtc11dcd i11sLa11cc" a.rid "subclass"
+in this kind of language, since any ext.ended inst.a.nee is also a. pot,ential t,emplat.e for a. new "type" of object..
+:-u. SOME CASE STUDIES 19
+and add big ears and the ability to fly. This elephant (Dumbo) is unique: there is no exact
+template for it.
+The paLLcrns of cmpa.Lhy in Si:;1r· arc dcLcrmincd individually by ca.ch ohjecl. An
+ollject's parent slots list the objects it empathizes with. In the example the elephants
+empathize ,vith an object holding shared behavior-walking, eating, ctc.-for elephants.
+Sinre a.n objer.t may rhange the rontents of its slot8 whenever it ,vishes, the lla.tterns of
+empathy can change dynamically. Finally, since the parent attribute is pa.rt of a. slot, the
+pallc•rns of empalhy a.re impliciL, in the a.LLribuLcs a,nd conlc•nLs of an objccL's sloLs, nol
+explicitly in the code.6 Sn,F's non-strir.t objecti-fied tern plates, and its individual, dynamir,
+and implicit patterns of empathy foster exploratory programming.
+3.4.3 "Standard Inheritance", and HYBRID
+Standard inherita.nre, exemplified by Smalltalk and a.II Simula-ba8ed languages, consists
+of class objects, which contain templates and therefore can generate instances, and the
+im:Lann•s gencralc•d by lhcsc classes. ~cw objc•cLs a.re simply cul from lhc lcmplaLc: c•vcry
+variable must be a.llorated individually for each object, while methods a.re :,ha.red through
+lhc Lcmpla.Le. New class, or generalor, objecls "inheriL" Lhc lcmplaLcs of lhcir supercla.sses.
+This is operationally equivalent to delegating Ila.rt of the template. These c:lasses may
+themselves be instances. In this case, the metaclass contains a template for an object (the
+dass) which il8elf contains a Lcmpla.Le.
+(, A limited form of explicit delegation is allowed but rarely used.
+Figure :3.5: A Smalltalk hierarchy.
+In standard inheritanre, all instanres of a dass fit exartly the template description.
+Once created, these objects retain their properties forever: each subclass must delegate to
+its specified superclass(P,R); each inRtance remains a member of itR clasR for all time. The
+objects in Fig. :t5 reflect this; in order to create Dumbo, the flying elephant, a new
+dass-wiLh a, single insLance-lw.d Lo be crca.Lcd.
+HYRRm iR a system which allows the traditionally statir, and strid relationRhips of
+standard inheritance to be dynamic and flexible. There is, after all, no inherent reason why
+all these rdaLionships must be strict. A lIYHIUll template, though embedded in a, da.ss,
+behaveR more like SF.Lr's ternplateR, allowing objects generated from this dass-template
+:-u. SOME CASE STUDIES
+to add or delete attrilllltes. Thus, 111 l<'ig. :3.G, the unique flying elephant is just an
+extended instance of the class elephant. Of course, if flying elephants were common,
+IIYHIUU docs not preclude Lhe crca.Lion of a new class-in fad, tlw la.ngua,gc will gc1wraLc
+such a. class antomat-i<:afly from a prototypical instance. In addition, HYRRm inherita.nr,e
+is dynamic, allowing runtime changt's to Lhe hierarchy, and instances a.re not distinguished
+from dasses, allowing them to expliritly delegate or share attributes.
+Fi!!;ure ;-U-i: A HYBRID hierarchy.
+3.5 Sharing and Software Evolution
+The issue of what kind of behavioral extensions to a system can be accomplished ,vithout
+modi(ying previously existing code is of cenlral imporLanu'. An imporLanl principle is Lha.L
+a. r.onr,eptually small extension to the behavior of a. system of objer,ts should be adiievable
+with a small extension to the code. The analysis of alternative mechanisms for sharing
+should pn.lCl'ed by considering their effects upon lhe nen'ssiLy for Juture modilicaLions ol
+the rode to ar,r,omplish behavioral extensions.
+There a.re two kinds of changes that we perform in object systems. One is adding ne,1,·
+code, or extending the system. The other is editing previously existing rnde, or modifying
+the system. These two kinds of changes have very different effects in the programming
+en viron1nen l.
+Adding new code t.o extend a. system is good. It. preserves t.he previous state of the
+system; at worst one ca.n simply delete the extension to return to a. previous state. Editing
+code is a much more probkma.tic Lransfonnalion. IL is a deslruclive opera lion, both lilcrally
+and figuratively. As a side efferting Ofleration, editing rnde destroys irrecoverably the
+previous sla,Lc of the syslem, unless careful backup/undo operations an.' performed. Perhaps
+worse is the propensity of editing operations to int.rodur.e inrnnsistenr.ies in a. system. Often,
+behavioral extensions are accomplished by editing several pieces of code in different places,
+a.nd performing lhese opera lions manually leaves Lhe possibilily tha.L nol all lhe edits will
+be performed in a r,onsistent manner.
+3.5. SHARING AND S'OFTlVARE EVOLUTION
+In fart., one ran rerast the whole objert.-oriented enterprise 111 terms of the extension/
+modification dichotomy. The true value of object-oriented techniques as opposed to
+conventional programming Ledmiques is nol LhaL lhey can do things tlw convenlional techniques
+ran't., but that they can often extend behavior by adding new code in cases where
+conventional lt'dmiqut's would require t'diling existing code instead. Objects arc good
+because they allmv new conrepts to be added to a system without modifying previously
+existing code. Methods are good because they permit adding functionality to a system
+wilhout modifying previously existing code. Classes arc good because they cna.bk using
+the behavior of one object as pa.rt of the behavior of another without modifying previously
+existing code.
+In a con venLional language, we might implement a data reprcsentalion for a. geometric
+shape as a list of points. A display procedure for this representation might dispatch on the
+kind of shape to more specialized procedures as follows:
+To DISPLAY a SHAPE:
+* If the shape is a TRIANGLE, call DISPLAY-TRIANGLE.
+* If the shape is a RECTANGLEc,a ll DISPLAY-RECTANGLE,
+* Otherwise, cause an UNRECOGNIZED-SHAePrrEo r.
+Define A-TRIANGLE to be the list of points (100, 100), (-50 200), (150 -20).
+The kind of shape muld be rerognizing by appending a tag onto the list of points, or
+perhaps even by examining the length of the list.
+\Ve can now ask the gucslion: \VhaL do we have to do to add a new sha.pc Lo Lhe display
+proredure"? In the ronventiona.l system, this involves destrudively editing the code to insert
+a ne,v conditional clause:
+To DISPLAY a SHAPE:
+* If the shape is a TRIANGLE, call DISPLAY-TRIANGLE.
+* If the shape is a PENTAGON, call DISPLAY-PENTAGON
+* Otherwise ...
+The editing process leaves open the possibility for inconsistent edits, inadvertent deletion
+oJ old code, rnismalch between protocols Jor using the da.ta represcnla,tion in lhc old and
+new clauses, etc
+In an object oriented language, by contra.st, the representation modularizes the addition
+oJ ca.ch new object and message so lhal adding a new object or mclhod can be done withoul
+any modification of previously existing rode.
+If I'm a SHAPE object, and I get a DISPLAY message,
+3.5. SHA.RING AND SOFT"H:4..RE EVOLUTION
+* I respond with an UNRECOGNIZED-SHAePrrEo r.
+Define a TRIANGLEto inherit from SHAPE.
+If I'm a TRIANGLE and I get a DISPLAY message,
+* I respond with DISPLAY-TRIANGLE.
+Define A-TRIANGLEto be an instance of SHAPE
+* With vertices (100, 100), (-50 200), (150 -20).
+Now, we ca.n ex lend lhc :,;yslem to know a.bout pcnla.gorrn simply by adding a. new
+definition which extends the system.
+Define a PENTAGONto inherit from SHAPE.
+If I'm a PENTAGONan d I get a DISPLAYm essage,
+* I respond with DISPLAY-PENTAGON.
+One way of cha.raclcrizing lhc themes common lo our three original papc'r8 i8 that we
+ollserved that the implementation of unanticitlated sharing between objects in Simula-style
+inheritance systems often required modification of existing code. \Ve were searching for ways
+oJ irnplcmcnling unanlicipa.ted behavioral extcnsiorrn without modifying existing code, and
+r,onr.luded that the solution was to allow more dynamir, forms of empathy. At the same time,
+we wish not to minimi7,e the importanre of language mer.hanisms for traditional, anticipated
+sharing and believe future languages must seek a synthesis of the two.
+The search for ways to accomplish interesting behavioral extensions of object-oriented
+systems by additive extensions to r.ode is far from over. If ,ve r.an -find any situations
+where a conceptually simple extension to the behavior of a.n object system seems to require
+gratuitous modification of existing code, it's the sign of a problem, and Wt' ought Lo be
+looking for a solution. \,Ye give an example of one such situation, as a guide for future
+research.
+Occasions arise when Wt' would like to specialize or extend not just a single object, but
+an entire hierarchy at once. No existing objec:t-oriented language provides a mer.hanism for
+this that does not require the modification of previously existing code. Yet conceptually,
+we should be ahk to pnfonn these changt'S hy some sort of additive cxtt'nsion.
+Suppose we ,vould like to construd a hierarchy of geometrical objects, such as sqtJares
+and triangles, which all respond to methods like DISPLAY. These would all be built on a
+common base object nanwd SHAPE, which might contajn variables for the common a.ttrilml.es
+Ii ke a CENTER point and perhaps a BOUNDING-BOX. 0 bjer.ts like TRIANGLE and SQUARE i 11 herit
+from SHAPE. H we started out with black-and-white shapes, we could certajnly add a, COLOR
+attribtJte to SHAPE by simple extension. H11t this would leave 11s with the task for reproducing
+the entire hierarchy of sub-objects emanating; from SHAPE in new 1 colored versions. In
+most present systems, programmers would simply be tempted to add the COLOR attribute
+directly to SHAPE rather than creating a new COLORED-SHAPE object. This would autornat3.5.
+SHA.RING AND SOFT"H:4..RE EVOLUTION '27
+ica.lly extend a.II the geometric objects to colored versions, but at the cost of a destrnr.tive
+editing operation. The previous black-and-white version would be lost, and the editing
+opera.tion introduces the pm,sibility of errors, such as a.ccidcntally sending a color cornnrnnd
+while running a previously existing blad-and-white program, unless Gtrefol attention ,vas
+paid to upward compatibility.
+Some languages, like the Flavors object-oriented extension to Lisp, have addressed the
+issue of sharing of orthogonal features by using the approach of "mixins'', using inheritance
+from multiple parents. This approach lds us create new objects possessing previously unanticipa.
+ted rnrnbina.tions of behavior from previously existing abstractions. In this a.pproad1,
+a C0L0R-MIXIN could be created independent of any shape properties, and a new type of
+ohject declared to inherit from C0L0R-MIXIN as well as wme specific sha.pe property like
+TRIANGLE. However, this approach still involves a.II the steps of reproducing a.II elements of
+the shape hierarchy in their color versions, or modifications to the code to retroactively mix
+in the color feature. Thus the mixin fraLurc docs not provide true support for smoothly
+imtllementing an unanticipated changes such as the black-and-white to color transition.
+\Ve don't have, al. the rnomc•nL, a, solution to this prohkm; we sta.Le it merely to point
+out the direction in which we believe object-oriented systems must evolve.
+Summary
+\Ve ha.ve described two sharing mechanisms, l<:mplales a.nd unpalhy, which hide al the core
+of object-oriented programming languages. Templates allow two objects to share a common
+28
+form. They may be embedded inside classes, or may be ob_jer.ts themselves. They may also
+vary in the degree of strictness they impose on system structure. Empathy allO\vs two objects
+to :,;hare common state or behavior. Tlw patterns oJ empathy may be determined statically
+or dynarnir.ally, per object or rwr group, implicitly or explir.itly. The decomposition of
+ohjecL-orienLcd la.ngua.ges inlo template a.nd empathy nwchanisrns can shed light on their
+similarities and differences, weaknesses and strengths.
+Bibliography
+[Agha, 1987] Gul Agha . .ilclors. MIT Press, Cambridge, Massadrnsclls, 1987.
+[Hirtwistle et al., 1973] C. Hirhvistle, 0. Dahl, H. :Vlyhrtag, and K. Nygaard. Simula Hegin.
+Auerbach Press, Philadelphia, 19B.
+[Hobrow a.nd Stefik, ·198l] I). C. Hobrmv and :VI. Stefik. The loops ma.nua.l. Technical
+Report KB-VLSI-81-B, Knowledg;e Systems Area, Xerox Pa.lo Alto Research Center,
+1981.
+[Hobrow ff al., 1986] I). C. Hobrow, K. Kahn, G. (<je7;ales, L. :Via.sinter, M. Stefik, and
+F. Zdybel. Commonloops: Iv1erg;ingl;i sp and object-oriented programming. In ACJ1,f
+SIGPLAIV Notices [SIG, 1986], pages 17-29.
+[Hewitt; 198,1] Carl Hewitt. Control structures as patterns of passing messages. In Patrick
+\Vinslon, editor, Arl1jicial Ir!ldhgenu:: iln JfIT Perspu·li-ce. MIT Press, Cambridge,
+:VIa .ssachu setts, l 984.
+29
+:rn BIBLIOGRA.PHY-
+[LaLonde, 1986] \Vilf LaLonde. An exemplar based smalltalk. In l'mcu:dings of thf. /,ir.,t
+ACM Conference on Object-Oriented Programming Systems 1 Languages, and Applicalions,
+pages :322-:330, Portland, Oregon, September 1986.
+[Lieberman, 1986] Henry Lieberman. Using prototyJlical objects to implement shared behavior
+in object-oriented systems. In Proceedings of the First A.CAI Conference on Object-
+Oriented Pr-ogmrr1.ming Syslen1s, Languages, and .ilpphcalions, pages 214-22'.3, Portland,
+Oregon, September l!:l86.
+[Lieberman, 1987] Henry Lieberman. Concurent object-oriented programming in Act l. In
+Aki nori Yone7,a,va and VI ario Tokoro, editors, 0/~jed-(h-ifntf.id Cow:wTent l'mgrmnming.
+~IIT Press, Cambridge, Ivfassachusetts, Hl87.
+[Mercado, 1988] Antonio Mcrea.do Jr. Hybrid: Implementing classes with prol.ol_ypcs. ]\,faster's
+Thesis Technical Report No. CS-88-12, Hrmvn University Department of Computer
+Science, Providence, Rhode Island, 02912, July 1988.
+[Moon, 1986] D. A. Moon. Objccl-oricnl.cd programming with flavors. In .11CM ,5IGPL.11N
+NotiCf.s [SIG, 1986], pages I 8.
+[Power and Weiss, 1988] Leigh Power and Zvi Weiss, editors. Addendum to theProccedings
+of the Sumul ACJlf Conference on Obju:l-Orienled Pmgrarnrning Sysl<:ms. Languag<:s,
+and A pplimtions, volume 2:J of Spt:ciaf ulition of SIC I' /,AN !Votia:s, VI ay 1988.
+BIBLIOGRA.PHY
+[SIG, 1986] ACl'vf SICJ>f,AN Notir:es Special Fdition on Ob_jed-Orin1,ted />roqrn.m.ming /,rmguages,
+volume 21, November 1986.
+[Stein, 1987] Lynn Andrea Stein. Delegation is inheritance. In Proceedings of the Second
+.11 CAI Couference on Objed-Oricnled Pmgmn1rnirtg .5y,;lerns, Language,;, and Applications,
+pages -i:38 l46, Orlando, Florida, October 1987.
+[Stroustrup, 1986] Hjarne Stroustrup. '/'he C++ J>rogm.mm-ing /,o.n_q110.gAe.d dison-Wesley,
+Reading, l\fassachusetts, 1986.
+[Ungar and Smith, 1987] David Ungar and Randall B. Smith. Self: The power of simplicity.
+In Proceedings of lhe Second ilCAI Conference on O~jec!-Or-ienled Progm.rnrning Syslern8,
+/,n,ngua_qu,, and Applimtions, pages 227 242, Orlando, I,·1orida, (ktober ·1987.
