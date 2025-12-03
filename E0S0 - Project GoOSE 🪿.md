@@ -55,9 +55,19 @@ Assuming that you've read the Parselcode solution, let's break down what GoOSE w
 8. Letter vectors
 9. The `fuzzy[TOut](any)` keyword mechanic
 
+When I refer to the concept of "shutdown" I mean it in the sense that each instance of GoOSE is its own
+isolated "operating system" (in the most literal sense of those terms).  When a GoOSE instance exits,
+it's "shut down" - when launched, it's "started up."  Both should follow traditional well-established
+best practices - like performing a form of P.O.S.T. before beginning complex execution.
+
+By extension of Go, every GoOSE instance is (technically) a really fancy _task scheduler_ of goroutines.  When
+those goroutines begin to act like isolated programs, is there really a difference from an "operating system"?
+
+What it also facilitates is the true underlying goal of, well, everything: _virtualized **psyches**_ =)
+
 ### Environment Setup
 
-First, if you'd like to work with a local development build of Go it's an absolute breeze.  Your IDE can easily
+First, if you'd like to work with a local development build of Go, it's an absolute breeze.  Your IDE can easily
 point to the development folder and allow you to work against it.  That being said, if you'd like to test from
 your terminal, you could add the following to your `rc` file:
 
@@ -90,6 +100,8 @@ your terminal, you could add the following to your `rc` file:
     go-go > /dev/null
 
 This allows you to run `go-goose` to switch to GoOSE in a terminal environment, or `go-go` to switch to the release version of Go.
+
+As humorous as the lyric is, mnemonics like that are quite helpful to orient yourself.  You should absolutely leverage them! =)
 
 To set up your local development branch of Go, you can clone it locally and then run `./make.bash` from the `src` folder.  If
 you need to add entries to the .gitignore without commiting them (perhaps your IDE's working folder), you can do so through
@@ -414,7 +426,7 @@ _**all**_ vector components:
         obj,
     }
 
-The final aspect to consider as what I refer to as "wildcard" vectors:
+The final aspect to consider are what I refer to as "wildcard" vectors:
 
     // "Wildcard" vector parameter and output types
     func Move(vec ltr.ABC) (out ltr.ABC, err error) {
@@ -424,7 +436,7 @@ The final aspect to consider as what I refer to as "wildcard" vectors:
         // When setting, you must introspect before using the appropriate type - otherwise, it will error at runtime
     }
 
-    // "Hard typed"  vector parameter and output types
+    // "Hard typed" vector parameter and output types
     func Move(vec ltr.ABC[any, any, any]) (out ltr.ABC[any, any, any], err error) {
         ...
         // Accepts only ltr.ABC[any, any any] typed objects
@@ -435,7 +447,7 @@ The final aspect to consider as what I refer to as "wildcard" vectors:
     vecB := ltr.ABC { } // INVALID CODE
 
 Wildcards are very important!  They shift the switch block necessary to execute on _any_ type from the calling
-code to the receiving code - allowing them to own the _**entire_** process of working with ANY componentized data.
+code to the receiving code - allowing them to own the _**entire**_ process of working with ANY componentized data.
 The only place wildcards are not allowed are off of the `set` package, as the receiver would have no way of knowing
 what the appropriate type is to assign.
 

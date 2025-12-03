@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"rec"
 	"runtime"
 )
@@ -10,9 +11,10 @@ func main() {
 	rec.Printf("self", "OS: %s\n", runtime.GOOS)
 	rec.Printf("self", "Architecture: %s\n", runtime.GOARCH)
 	rec.Printf("self", "Compiler: %s\n", runtime.Compiler)
-
+	var a any
+	test(nil)
 }
 
-func MoveBy42[T any](vec T) (out T, err error) {
+func test(str fmt.Stringer) {
 
 }
